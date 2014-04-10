@@ -22,16 +22,23 @@ def readme():
         return ''
 
 
+def get_version():
+    src_path = os.path.join(os.path.dirname(__file__), 'src')
+    sys.path.append(src_path)
+    import findtools
+    return findtools.__version__
+
+
 setup(
     name='findtools',
-    version='1.0.0',
+    version=get_version(),
     description='Python implementation of GNU Findutils',
     long_description=readme(),
     author='Yauhen Yakimovich',
     author_email='eugeny.yakimovitch@gmail.com',
     url='https://github.com/ewiger/findtools',
     license='GPL',
-    scripts=glob('bin/*'),
+    #scripts=glob('bin/*'),
     #data_files=glob('libexec/*'),
     packages=['findtools'],
     package_dir={
