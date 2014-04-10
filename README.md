@@ -10,8 +10,8 @@ from findtools.find_files import (find_files, Match)
 
 
 # Recursively find all *.sh files in **/usr/bin**
-sh_files = Match(filetype='',name='*.sh')
-found_files = find_files(path='/usr/bin', match=sh_files)
+sh_files_pattern = Match(filetype='f', name='*.sh')
+found_files = find_files(path='/usr/bin', match=sh_files_pattern)
 
 for found_file in found_files:
 	print found_file
