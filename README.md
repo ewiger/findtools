@@ -5,19 +5,19 @@ Findtools is a pythonic implementation of file search routines inspired by
 GNU Findutils.
 
 
-<blockquote>	
-    from findtools.find_files import (find_files, Match)
+```python
+from findtools.find_files import (find_files, Match)
 
 
-    # Recursively find all *.sh files in **/usr/bin**
-    sh_files = Match(filetype='',name='*.sh')
-    found_files = find_files(path='/usr/bin', match=sh_files)
+# Recursively find all *.sh files in **/usr/bin**
+sh_files = Match(filetype='',name='*.sh')
+found_files = find_files(path='/usr/bin', match=sh_files)
 
-    for found_file in found_files:
-    	print found_file
-</blockquote>
+for found_file in found_files:
+	print found_file
+```
 
-The above should be equivalent to
+The above is equivalent to
 
 <blockquote>
 	find /usr/bin -type f -name '*.sh'
