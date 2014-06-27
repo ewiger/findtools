@@ -40,7 +40,7 @@ class Match(object):
         @param filetype: flag or name of the file type used as matching
                          condition
 
-        @param name: a strign for fnmatch pattern to match file name or
+        @param name: a string for fnmatch pattern to match file name or
                      compiled regexp object.
         '''
         # File type condition.
