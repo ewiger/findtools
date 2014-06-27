@@ -24,8 +24,9 @@ def readme():
 
 def get_version():
     src_path = os.path.join(os.path.dirname(__file__), 'src')
-    sys.path.append(src_path)
+    sys.path = [src_path] + sys.path
     import findtools
+    findtools.__path__
     return findtools.__version__
 
 
