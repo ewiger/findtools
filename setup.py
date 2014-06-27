@@ -45,8 +45,4 @@ setup(
         'findtools': 'src/findtools',
     },
     download_url='https://github.com/ewiger/findtools/tarball/master',
-    install_requires=[
-        'sh >= 1.08',
-        'daemoncxt >= 1.5.7',
-    ],
 )

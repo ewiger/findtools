@@ -33,32 +33,43 @@ filetypes = {
 }
 
 
-class Match(object):
+class MatchPatterns(object):
 
-    def __init__(self, filetype=None, name=None):
+    def __init__(self, filetype=None, names=None):
         '''
         @param filetype: flag or name of the file type used as matching
                          condition
 
-        @param name: a string for fnmatch pattern to match file name or
-                     compiled regexp object.
+        @param names: a string for fnmatch pattern to match file name or
+                      compiled regexp object. A string surrounded with '/'
+                      is interpreted as a regexp.
         '''
         # File type condition.
         if filetype in filetypes.keys():
             filetype = filetypes[filetype]
         self.type = filetype
         # File name condition.
-        self.name_pattern = None
-        if name is not None:
-            if isinstance(name, basestring):
-                self.name_pattern = self.compile_fnmatch_pattern(name)
-            else:
-                # Assume it is already a regexp
-                self.name_pattern = name
+        self.name_patterns = list()
+        if names is not None:
+            assert type(names) == list
+            for name in names:
+                if isinstance(name, basestring):
+                    if self.is_a_regexp(name):
+                        self.name_patterns.append(re.compile(name))
+                    else:
+                        self.name_patterns.append(
+                            self.compile_fnmatch_pattern(name)
+                        )
+                else:
+                    # Assume it is already a regexp.
+                    self.name_pattern = name
         # Initialize private attributes as empty.
         self.__pathname = None
         self.__root = None
         self.__name = None
+
+    def is_a_regexp(self, pattern):
+        return pattern.startswith('/') and pattern.endswith('/')
 
     def compile_fnmatch_pattern(self, pattern):
         return re.compile(fnmatch.translate(pattern))
@@ -71,7 +82,8 @@ class Match(object):
         return True
 
     def match_name(self):
-        return self.name_pattern.match(self.__name) is not None
+        return all([(pattern.match(self.__name) is not None)
+                   for pattern in self.name_patterns])
 
     def matches(self, root, name):
         self.__root = root
@@ -80,13 +92,31 @@ class Match(object):
         if self.type is not None:
             if not self.match_type():
                 return False
-        if self.name_pattern is not None:
-            if not self.match_name():
-                return False
-        return True
+        if not self.name_patterns:
+            return True
+        return self.match_name()
 
     def __call__(self, root, name):
         return self.matches(root, name)
+
+
+class Match(MatchPatterns):
+    '''
+    Left for backwards compatibility. Use MatchPatterns which is more general.
+    '''
+
+    def __init__(self, filetype=None, name=None):
+        '''
+        @param filetype: flag or name of the file type used as matching
+                         condition
+
+        @param name: a string for fnmatch pattern to match file name or
+                     compiled regexp object.
+        '''
+        if name is not None:
+            super(Match, self).__init__(filetype=filetype, names=[name])
+        else:
+            super(Match, self).__init__(filetype=filetype)
 
 
 def collect_size(root, name):
