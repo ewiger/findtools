@@ -55,7 +55,9 @@ class MatchPatterns(object):
             for name in names:
                 if isinstance(name, basestring):
                     if self.is_a_regexp(name):
-                        self.name_patterns.append(re.compile(name))
+                        # Don't forget to cut the '/' wrapping, which is
+                        # useless for python re syntaxes.
+                        self.name_patterns.append(re.compile(name[1:-1]))
                     else:
                         self.name_patterns.append(
                             self.compile_fnmatch_pattern(name)
