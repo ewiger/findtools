@@ -2,11 +2,12 @@ import unittest
 import tempfile
 import os
 import shutil
-from findtools.find_files import (find_files, Match, collect_size)
+from findtools.find_files import (find_files, Match, collect_size,
+                                  MatchAnyPatternsAndTypes)
 from findtools.core import touch
 
 
-class Test(unittest.TestCase):
+class TestFindTools(unittest.TestCase):
 
     def setUp(self):
         # create and populate temporary folder
@@ -44,6 +45,7 @@ class Test(unittest.TestCase):
         file_search = find_files(
             self.folder_with_files, Match(filetype='f', name='1*'))
         pathnames = [name for name in file_search]
+        print pathnames
         self.assertTrue(len(pathnames) > 1)
         condition = lambda pn: os.path.basename(pn).startswith('1')
         self.assertEquals(len(filter(condition, pathnames)), len(pathnames))
@@ -57,6 +59,21 @@ class Test(unittest.TestCase):
         )
         for name, size in file_search:
             self.assertTrue(size > 0)
+
+    def testMatchAnyOfPatterns(self):
+        # Add some folders.
+        for num in range(20, 30):
+            os.mkdir(os.path.join(self.folder_with_files, str(num)))
+        # Find by mixed criteria.
+        file_search = find_files(
+            self.folder_with_files,
+            MatchAnyPatternsAndTypes(
+                filetypes=['f', 'd'],
+                names=['*4']
+            ),
+        )
+        names = [name for name in file_search]
+        assert '/24' in str(names) and '/4' in str(names)
 
 
 if __name__ == "__main__":

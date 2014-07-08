@@ -33,22 +33,51 @@ filetypes = {
 }
 
 
-class MatchPatterns(object):
+class FileTypeCondition(object):
 
-    def __init__(self, filetype=None, names=None):
-        '''
-        @param filetype: flag or name of the file type used as matching
-                         condition
-
-        @param names: a string for fnmatch pattern to match file name or
-                      compiled regexp object. A string surrounded with '/'
-                      is interpreted as a regexp.
-        '''
-        # File type condition.
+    def __init__(self, filetype):
         if filetype in filetypes.keys():
             filetype = filetypes[filetype]
         self.type = filetype
-        # File name condition.
+
+    def match(self, pathname):
+        '''
+        Match type of the file system entry to satisfy a least of types.
+        '''
+        if self.type == 'directory' and not os.path.isdir(pathname):
+            return False
+        if self.type == 'file' and not os.path.isfile(pathname):
+            return False
+        if self.type == 'link' and not os.path.islink(pathname):
+            return False
+        return True
+
+
+class MatchAllPatternsAndTypes(object):
+
+    def __init__(self, filetypes=None, names=None):
+        '''
+        @param filetypes: a list of flags or names of the file type used as
+                          matching condition
+
+        @param names: a list of strings for fnmatch pattern to match file name
+                      or compiled regexp object. A string surrounded with '/'
+                      is interpreted as a regexp.
+        '''
+        # We need at least one of the criteria.
+        assert names is not None or filetypes is not None
+        # File type conditions.
+        self.filetype_conditions = list()
+        if filetypes is not None:
+            assert type(filetypes) == list
+            for filetype in filetypes:
+                if isinstance(filetype, basestring):
+                    filetype_condition = FileTypeCondition(filetype)
+                    self.filetype_conditions.append(filetype_condition)
+                else:
+                    # Assume FileTypeCondition-like instance.
+                    self.filetype_conditions.append(filetype)
+        # File name conditions.
         self.name_patterns = list()
         if names is not None:
             assert type(names) == list
@@ -76,33 +105,53 @@ class MatchPatterns(object):
     def compile_fnmatch_pattern(self, pattern):
         return re.compile(fnmatch.translate(pattern))
 
-    def match_type(self):
-        if self.type == 'directory' and not os.path.isdir(self.__pathname):
+    def matches(self, root, name):
+        self._root = root
+        self._name = name
+        self._pathname = mkpathname(root, name)
+        if self.filetype_conditions and not self.match_type():
             return False
-        if self.type == 'file' and not os.path.isfile(self.__pathname):
+        if self.name_patterns and not self.match_name():
             return False
         return True
-
-    def match_name(self):
-        return all([(pattern.match(self.__name) is not None)
-                   for pattern in self.name_patterns])
-
-    def matches(self, root, name):
-        self.__root = root
-        self.__name = name
-        self.__pathname = mkpathname(root, name)
-        if self.type is not None:
-            if not self.match_type():
-                return False
-        if not self.name_patterns:
-            return True
-        return self.match_name()
 
     def __call__(self, root, name):
         return self.matches(root, name)
 
+    def match_type(self):
+        '''
+        Match type of the file system entry to satisfy all file type condition.
+        '''
+        return all([(type_condition.match(self._pathname) is True)
+                    for type_condition in self.filetype_conditions])
 
-class Match(MatchPatterns):
+    def match_name(self):
+        '''
+        Match name of the file system entry to satisfy all of name patterns.
+        '''
+        return all([(pattern.match(self._name) is not None)
+                   for pattern in self.name_patterns])
+
+
+class MatchAnyPatternsAndTypes(MatchAllPatternsAndTypes):
+    '''Overrides 'all' -> to 'any'.'''
+
+    def match_type(self):
+        '''
+        Match type of the file system entry to satisfy all file type condition.
+        '''
+        return any([(type_condition.match(self._pathname) is True)
+                    for type_condition in self.filetype_conditions])
+
+    def match_name(self):
+        '''
+        Match name of the file system entry to satisfy all of name patterns.
+        '''
+        return any([(pattern.match(self._name) is not None)
+                   for pattern in self.name_patterns])
+
+
+class Match(MatchAllPatternsAndTypes):
     '''
     Left for backwards compatibility. Use MatchPatterns which is more general.
     '''
@@ -116,9 +165,11 @@ class Match(MatchPatterns):
                      compiled regexp object.
         '''
         if name is not None:
-            super(Match, self).__init__(filetype=filetype, names=[name])
+            super(Match, self).__init__(filetypes=[filetype], names=[name])
+        elif filetype is not None:
+            super(Match, self).__init__(filetypes=[filetype])
         else:
-            super(Match, self).__init__(filetype=filetype)
+            raise Exception('Either filetype or name argument is expected.')
 
 
 def collect_size(root, name):
