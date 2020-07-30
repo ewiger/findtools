@@ -5,7 +5,7 @@ clean:
 		find ./ -type d -name '*.egg-info' | xargs rm -rf
 
 dist:
-		python setup.py bdist_egg
+		python setup.py sdist bdist_egg
 		twine check dist/*
 
 test:

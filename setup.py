@@ -8,7 +8,7 @@ Required:
     wheel >= 0.31.0
     twine >= 1.11.0
 
-`python setup.py bdist_egg`
+`python setup.py sdist bdist_egg`
 `twine check dist/*`
 `twine upload dist/*`
 """
