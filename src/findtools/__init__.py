@@ -1,7 +1,7 @@
 '''Findtools is a pythonic implementation of file search routines inspired by
 GNU Findutils.
 
-Copyright 2014 Yauhen Yaimovich
+Copyright 2014,2020 Yauhen Yaimovich
 
 License
 -------
@@ -21,4 +21,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-__version__ = '1.0.3'
+__version__ = '1.1.0'

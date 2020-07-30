@@ -71,7 +71,7 @@ class MatchAllPatternsAndTypes(object):
         if filetypes is not None:
             assert type(filetypes) == list
             for filetype in filetypes:
-                if isinstance(filetype, basestring):
+                if isinstance(filetype, str):
                     filetype_condition = FileTypeCondition(filetype)
                     self.filetype_conditions.append(filetype_condition)
                 else:
@@ -82,7 +82,7 @@ class MatchAllPatternsAndTypes(object):
         if names is not None:
             assert type(names) == list
             for name in names:
-                if isinstance(name, basestring):
+                if isinstance(name, str):
                     if self.is_a_regexp(name):
                         # Don't forget to cut the '/' wrapping, which is
                         # useless for python re syntaxes.

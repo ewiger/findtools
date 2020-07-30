@@ -37,7 +37,7 @@ class TestFindTools(unittest.TestCase):
         # for files.
         file_search = find_files(self.folder_with_files, Match(filetype='d'))
         pathnames = [name for name in file_search]
-        self.assertEquals(len(pathnames), 0)
+        self.assertEqual(len(pathnames), 0)
         file_search = find_files(self.folder_with_files, Match(filetype='f'))
         pathnames = [name for name in file_search]
         self.assertTrue(len(pathnames) > 0)
@@ -45,10 +45,10 @@ class TestFindTools(unittest.TestCase):
         file_search = find_files(
             self.folder_with_files, Match(filetype='f', name='1*'))
         pathnames = [name for name in file_search]
-        print pathnames
+        print(pathnames)
         self.assertTrue(len(pathnames) > 1)
         condition = lambda pn: os.path.basename(pn).startswith('1')
-        self.assertEquals(len(filter(condition, pathnames)), len(pathnames))
+        self.assertEqual(len(list(filter(condition, pathnames))), len(pathnames))
 
     def testFindCollect(self):
         # Get files plus their size

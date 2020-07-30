@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 
 def touch(filename, times=None):
-    file_handle = file(filename, 'a')
+    file_handle = open(filename, 'a')
     try:
         os.utime(filename, times)
     finally:
