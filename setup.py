@@ -1,9 +1,17 @@
 #!/usr/bin/env python
-# TODO: migrate to distribute?
-#import distribute_setup
-#distribute_setup.use_setuptools()
+"""
 
+`python3 -m pip install --user --upgrade setuptools wheel twine`
 
+Required:
+    setuptools >= 38.6.0
+    wheel >= 0.31.0
+    twine >= 1.11.0
+
+`python setup.py bdist_egg`
+`twine check dist/*`
+`twine upload dist/*`
+"""
 import os.path
 import sys
 from glob import glob
@@ -35,6 +43,7 @@ setup(
     version=get_version(),
     description='Python implementation of GNU Findutils',
     long_description=readme(),
+    long_description_content_type='text/markdown',
     author='Yauhen Yakimovich',
     author_email='eugeny.yakimovitch@gmail.com',
     url='https://github.com/ewiger/findtools',
