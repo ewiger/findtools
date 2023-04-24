@@ -93,7 +93,7 @@ class MatchAllPatternsAndTypes(object):
                         )
                 else:
                     # Assume it is already a regexp.
-                    self.name_pattern = name
+                    self.name_patterns.append(name)
         # Initialize private attributes as empty.
         self.__pathname = None
         self.__root = None
