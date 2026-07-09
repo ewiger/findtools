@@ -92,12 +92,12 @@ class MatchAllPatternsAndTypes(object):
                             self.compile_fnmatch_pattern(name)
                         )
                 else:
-                    # Assume it is already a regexp.
-                    self.name_pattern = name
+                    # Assume it is already a compiled regexp.
+                    self.name_patterns.append(name)
         # Initialize private attributes as empty.
-        self.__pathname = None
-        self.__root = None
-        self.__name = None
+        self._pathname = None
+        self._root = None
+        self._name = None
 
     def is_a_regexp(self, pattern):
         return pattern.startswith('/') and pattern.endswith('/')
@@ -164,12 +164,12 @@ class Match(MatchAllPatternsAndTypes):
         @param name: a string for fnmatch pattern to match file name or
                      compiled regexp object.
         '''
-        if name is not None:
-            super(Match, self).__init__(filetypes=[filetype], names=[name])
-        elif filetype is not None:
-            super(Match, self).__init__(filetypes=[filetype])
-        else:
-            raise Exception('Either filetype or name argument is expected.')
+        if filetype is None and name is None:
+            raise ValueError('Either filetype or name argument is expected.')
+        super(Match, self).__init__(
+            filetypes=None if filetype is None else [filetype],
+            names=None if name is None else [name],
+        )
 
 
 def collect_size(root, name):
@@ -180,10 +180,10 @@ def collect_size(root, name):
 
 def find_files(path, match=anypathname, collect=mkpathname, recursive=True):
     if not os.path.exists(path):
-        raise Exception('Path does not exists: %s' % path)
+        raise FileNotFoundError('Path does not exist: %s' % path)
     walker = os.walk(path)
     if not recursive:
-        walker = [next(walker)]
+        walker = [next(walker, (path, [], []))]
     for root, dirs, files in walker:
         names = dirs + files
         for name in names:

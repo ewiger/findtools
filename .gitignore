@@ -52,3 +52,10 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# uv / pytest
+.venv/
+.pytest_cache/
+
+# MkDocs build output
+site/
+

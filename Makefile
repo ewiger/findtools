@@ -1,15 +1,20 @@
-.PHONY: clean dist test
-
-clean:
-		rm -rf dist build *.egg-info
-		find ./ -type d -name '*.egg-info' | xargs rm -rf
-
-dist:
-		python setup.py sdist bdist_egg
-		twine check dist/*
+.PHONY: clean dist test docs docs-serve upload
 
 test:
-		cd tests && python test_findtools.py
+	uv run --group dev pytest
+
+dist:
+	uv build
 
 upload:
-		twine upload dist/*
+	uv publish
+
+docs:
+	uv run --group docs mkdocs build
+
+docs-serve:
+	uv run --group docs mkdocs serve
+
+clean:
+	rm -rf dist build site .pytest_cache
+	find . -type d -name '*.egg-info' -o -type d -name '__pycache__' | xargs rm -rf

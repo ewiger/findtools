@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "findtools"
+dynamic = ["version"]
+description = "Python implementation of GNU Findutils"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+authors = [
+    { name = "Yauhen Yakimovich", email = "eugeny.yakimovitch@gmail.com" },
+]
+requires-python = ">=3.9"
+keywords = ["find", "files", "search", "findutils", "filesystem"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Filesystems",
+]
+
+[project.urls]
+Homepage = "https://github.com/ewiger/findtools"
+Documentation = "https://ewiger.github.io/findtools/"
+Repository = "https://github.com/ewiger/findtools"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+docs = [
+    "mkdocs-material>=9",
+    "mkdocstrings[python]>=0.26",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = { attr = "findtools.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

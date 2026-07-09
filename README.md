@@ -1,58 +1,76 @@
 # findtools
 
-Findtools is a pythonic implementation of file search routines inspired by GNU Findutils.
+[![CI](https://github.com/ewiger/findtools/actions/workflows/ci.yml/badge.svg)](https://github.com/ewiger/findtools/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/findtools)](https://pypi.org/project/findtools/)
 
+Findtools is a pythonic implementation of file search routines inspired by
+GNU Findutils.
+
+**Documentation: <https://ewiger.github.io/findtools/>**
 
 ```python
-from findtools.find_files import (find_files, Match)
+from findtools.find_files import find_files, Match
 
 
-# Recursively find all *.sh files in **/usr/bin**
+# Recursively find all *.sh files in /usr/bin
 sh_files_pattern = Match(filetype='f', name='*.sh')
 found_files = find_files(path='/usr/bin', match=sh_files_pattern)
 
 for found_file in found_files:
-	print(found_file)
+    print(found_file)
 ```
 
 The above is equivalent to
 
-```
+```sh
 find /usr/bin -type f -name '*.sh'
 ```
 
-
 ## Install
 
-You can install this library by via `pip`:
+```sh
+pip install findtools
+```
 
-<blockquote>
-    pip install findtools
-</blockquote>
+or with [uv](https://docs.astral.sh/uv/):
+
+```sh
+uv add findtools
+```
+
+Requires Python 3.9+. Findtools has no dependencies outside the standard
+library.
 
 ## Develop
 
-Alternatively you can clone this git repository. Then if you are using pyenv or miniconda as your local development setup
+The project is managed with [uv](https://docs.astral.sh/uv/):
 
-<blockquote>
-    git clone https://github.com/ewiger/findtools.git findtools && cd findtools
-    pip install -e .
-</blockquote>
-
-This will symlink you local copy and help you testign the package locally.
+```sh
+git clone https://github.com/ewiger/findtools.git && cd findtools
+uv sync --group dev
+```
 
 ## Test
 
-You can run tests yourself with built-in `unittest` lib:
+Run the test suite with pytest:
 
-    cd tests && python test_findtools.py
+```sh
+uv run pytest
+```
 
-or with pytest:
+or via make:
 
-    cd tests && pytest
+```sh
+make test
+```
 
-Package has been tested on **python3.8+** and **python2.7+**.
+## Documentation
 
-Upgrade to latest with `pip install findtools==1.1.0`
+The docs are built with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+and deployed to GitHub Pages on every push to `master`. To preview locally:
 
-Please report issues if this breaks for you.
+```sh
+make docs-serve
+```
+
+Please report issues at <https://github.com/ewiger/findtools/issues>.
