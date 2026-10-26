@@ -38,7 +38,7 @@ or with [uv](https://docs.astral.sh/uv/):
 uv add findtools
 ```
 
-Requires Python 3.9+. Findtools has no dependencies outside the standard
+Requires Python 3.10+. Findtools has no dependencies outside the standard
 library.
 
 ## Develop

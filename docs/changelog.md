@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Dropped Python 3.9 support (end of life since October 2025); requires
+  Python 3.10+.
+
 ## 1.2.0 (2026-07-09)
 
 Revitalization release.
