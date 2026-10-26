@@ -11,14 +11,13 @@ license = "GPL-3.0-or-later"
 authors = [
     { name = "Yauhen Yakimovich", email = "eugeny.yakimovitch@gmail.com" },
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["find", "files", "search", "findutils", "filesystem"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
